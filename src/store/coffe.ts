@@ -1,3 +1,4 @@
+import shortid from "shortid";
 import create from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
@@ -25,8 +26,9 @@ export type Address = {
 };
 
 export type Coffee = {
-  id: number;
+  id: string;
   name: string;
+  description: string;
   price: number;
   tags: CoffeeVariants[];
   thumbnail: string;
@@ -34,8 +36,8 @@ export type Coffee = {
 
 export type CoffeeActions = {
   addCoffee: (coffee: Coffee) => void;
-  editCoffee: (id: number, coffee: Coffee) => void;
-  removeCoffee: (id: number) => void;
+  editCoffee: (id: string, coffee: Coffee) => void;
+  removeCoffee: (id: string) => void;
 };
 
 export type ShoppingCart = {
@@ -43,7 +45,7 @@ export type ShoppingCart = {
 };
 
 export type Request = {
-  id: number;
+  id: string;
   coffees: Coffee[];
   paymentMethod: PaymentVariants;
   address: Address;
@@ -51,8 +53,8 @@ export type Request = {
 
 type RequestActions = {
   addRequest: (request: Request) => void;
-  editRequest: (id: number, request: Request) => void;
-  removeRequest: (id: number) => void;
+  editRequest: (id: string, request: Request) => void;
+  removeRequest: (id: string) => void;
 };
 
 export type Store = {
@@ -62,6 +64,21 @@ export type Store = {
 };
 
 export type CoffeeStore = Store & RequestActions & CoffeeActions;
+
+function fillCoffee() {
+  const coffees: Coffee[] = [];
+  for (let i = 0; i < 10; i++) {
+    coffees.push({
+      id: shortid.generate(),
+      name: `Café ${i}`,
+      description: `Descrição do café ${i}`,
+      price: Math.floor(Math.random() * 100),
+      tags: ["TRADICIONAL", "COM LEITE"],
+      thumbnail: "https://picsum.photos/200",
+    });
+  }
+  return coffees;
+}
 
 export const useCoffeeStore = create(
   devtools(

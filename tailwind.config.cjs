@@ -2,32 +2,6 @@
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    colors: {
-      base: {
-        white: "#ffffff",
-        background: "#fafafa",
-        card: "#f3f2f2",
-        input: "#ededed",
-        button: "#e6e5e5",
-        hover: "#d7d5d5",
-        label: "#8d8686",
-        text: "#574f4d",
-        subtitle: "#403937",
-        title: "#272221",
-      },
-      brand: {
-        purple: {
-          base: "#8047f8",
-          dark: "#4b2995",
-          light: "#ebe5f9",
-        },
-        yellow: {
-          dark: "#c47f17",
-          base: "#dbac2c",
-          light: "#f1e9c9",
-        },
-      },
-    },
     fontSize: {
       "2xs": "0.625rem",
       xs: "0.75rem",
@@ -54,7 +28,34 @@ module.exports = {
       xl: "1.25rem",
       full: "9999px",
     },
-    extend: {},
+    extend: {
+      colors: {
+        base: {
+          white: "#ffffff",
+          background: "#fafafa",
+          card: "#f3f2f2",
+          input: "#ededed",
+          button: "#e6e5e5",
+          hover: "#d7d5d5",
+          label: "#8d8686",
+          text: "#574f4d",
+          subtitle: "#403937",
+          title: "#272221",
+        },
+        brand: {
+          purple: {
+            base: "#8047f8",
+            dark: "#4b2995",
+            light: "#ebe5f9",
+          },
+          yellow: {
+            dark: "#c47f17",
+            base: "#dbac2c",
+            light: "#f1e9c9",
+          },
+        },
+      },
+    },
   },
   plugins: [],
 };
