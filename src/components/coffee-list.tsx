@@ -1,9 +1,12 @@
+import { ApolloError } from "@apollo/client";
 import { FC, memo } from "react";
 import { Coffee } from "../store/coffe";
 import { ContentContainer } from "./content.container";
 
 interface CoffeeListProps {
   coffeeList: Coffee[];
+  isLoading?: boolean;
+  error?: ApolloError;
 }
 
 const CoffeeListHeader = () => {
@@ -34,54 +37,56 @@ const EmptyCoffeeList = () => {
   );
 };
 
-export const CoffeeList: FC<CoffeeListProps> = memo(({ coffeeList }) => {
-  if (coffeeList.length === 0)
+export const CoffeeList: FC<CoffeeListProps> = memo(
+  ({ coffeeList, error, isLoading }) => {
+    if (coffeeList.length === 0)
+      return (
+        <ContentContainer>
+          <CoffeeListHeader />
+          <EmptyCoffeeList />
+        </ContentContainer>
+      );
     return (
       <ContentContainer>
         <CoffeeListHeader />
-        <EmptyCoffeeList />
-      </ContentContainer>
-    );
-  return (
-    <ContentContainer>
-      <CoffeeListHeader />
-      <div className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"}>
-        {coffeeList.map((coffee) => (
-          <div
-            className={`
+        <div className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"}>
+          {coffeeList.map((coffee) => (
+            <div
+              className={`
           flex flex-col items-center justify-center
           bg-white rounded-lg shadow-lg
           p-4
         `}
-            key={coffee.id}
-          >
-            <img
-              src={coffee.thumbnail}
-              alt={coffee.name}
-              className={`
+              key={coffee.id}
+            >
+              <img
+                src={coffee.thumbnail}
+                alt={coffee.name}
+                className={`
             w-24 h-24
             object-cover
             rounded-full
           `}
-            />
-            <h3
-              className={`
+              />
+              <h3
+                className={`
             text-xl font-bold font-baloo-2 text-brand-purple-base
             mt-4
           `}
-            >
-              {coffee.name}
-            </h3>
-            <span
-              className={`
+              >
+                {coffee.name}
+              </h3>
+              <span
+                className={`
             text-gray-500
           `}
-            >
-              {coffee.description}
-            </span>
-          </div>
-        ))}
-      </div>
-    </ContentContainer>
-  );
-});
+              >
+                {coffee.description}
+              </span>
+            </div>
+          ))}
+        </div>
+      </ContentContainer>
+    );
+  }
+);
