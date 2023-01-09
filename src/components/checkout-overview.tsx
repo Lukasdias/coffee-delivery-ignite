@@ -5,7 +5,7 @@ type Props = {};
 
 export function CheckoutOverview({}: Props) {
   return (
-    <div className={"flex flex-col gap-2 items-start max-w-[640px]"}>
+    <div className={"flex flex-col gap-2 items-start w-full"}>
       <span className={"font-baloo-2 font-bold text-lg"}>
         Cafés selecionados
       </span>
