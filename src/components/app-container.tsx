@@ -6,7 +6,7 @@ export const AppContainer: FC = () => {
   return (
     <div
       className={
-        "w-screen h-screen bg-base-background flex flex-col overflow-hidden p-8"
+        "w-screen h-screen bg-base-background flex flex-col overflow-x-hidden overflow-y-auto p-8"
       }
     >
       <Header />

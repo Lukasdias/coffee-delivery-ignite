@@ -36,9 +36,10 @@ const ItemsOnCart = () => {
   const [props, api] = useSpring(
     () => ({
       from: { num: 0, y: 50, scale: 0.2 },
-      to: { num: 10, y: 0, scale: 1 },
+      to: { num: count, y: 0, scale: 1 },
+      config: config.stiff,
     }),
-    []
+    [count]
   );
 
   return (

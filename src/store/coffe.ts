@@ -1,7 +1,8 @@
 import shortid from "shortid";
 import create from "zustand";
 import { devtools, persist } from "zustand/middleware";
-
+import { immer } from "zustand/middleware/immer";
+import shallow from "zustand/shallow";
 export type CoffeeVariants =
   | "TRADICIONAL"
   | "COM LEITE"
@@ -25,6 +26,10 @@ export type Address = {
   uf: string;
 };
 
+export type AddressActions = {
+  setAddress: (address: Address) => void;
+};
+
 export type Coffee = {
   id: string;
   name: string;
@@ -40,53 +45,90 @@ export type CoffeeActions = {
   removeCoffee: (id: string) => void;
 };
 
-export type ShoppingCart = {
+export type ShoppingCartState = {
   selectedCoffees: Coffee[];
+  finalPrice: number;
 };
 
-export type Request = {
-  id: string;
-  coffees: Coffee[];
-  paymentMethod: PaymentVariants;
-  address: Address;
-};
-
-type RequestActions = {
-  addRequest: (request: Request) => void;
-  editRequest: (id: string, request: Request) => void;
-  removeRequest: (id: string) => void;
+export type ShoppingCartActions = {
+  addCoffeeToCart: (coffee: Coffee) => void;
+  editCoffeeFromCart: (id: string, coffee: Coffee) => void;
+  removeCoffeeFromCart: (id: string) => void;
+  clearCart: () => void;
 };
 
 export type Store = {
-  requests: Request[];
-  shoppingCart: ShoppingCart;
+  address: Address;
+  shoppingCart: ShoppingCartState;
   availableCoffees: Coffee[];
 };
 
-export type CoffeeStore = Store & RequestActions & CoffeeActions;
-
-function fillCoffee() {
-  const coffees: Coffee[] = [];
-  for (let i = 0; i < 10; i++) {
-    coffees.push({
-      id: shortid.generate(),
-      name: `Café ${i}`,
-      description: `Descrição do café ${i}`,
-      price: Math.floor(Math.random() * 100),
-      tags: ["TRADICIONAL", "COM LEITE"],
-      thumbnail: "https://picsum.photos/200",
-    });
-  }
-  return coffees;
-}
+export type CoffeeStore = Store &
+  CoffeeActions &
+  ShoppingCartActions &
+  AddressActions;
 
 export const useCoffeeStore = create(
   devtools(
     persist<CoffeeStore>(
-      (set) => ({
-        requests: [],
+      (set, get) => ({
+        address: {} as Address,
+        setAddress: (address) => {
+          set((state) => ({
+            ...state,
+            address,
+          }));
+        },
         shoppingCart: {
           selectedCoffees: [],
+          finalPrice: 0,
+        },
+        addCoffeeToCart: (coffee) => {
+          set((state) => ({
+            ...state,
+            shoppingCart: {
+              ...state.shoppingCart,
+              selectedCoffees: [...state.shoppingCart.selectedCoffees, coffee],
+              finalPrice: state.shoppingCart.finalPrice + coffee.price,
+            },
+          }));
+        },
+        editCoffeeFromCart: (id, coffee) => {
+          set((state) => ({
+            ...state,
+            shoppingCart: {
+              ...state.shoppingCart,
+              selectedCoffees: state.shoppingCart.selectedCoffees.map((c) =>
+                c.id === id ? coffee : c
+              ),
+              finalPrice: state.shoppingCart.finalPrice + coffee.price,
+            },
+          }));
+        },
+        removeCoffeeFromCart: (id) => {
+          const coffee = get().shoppingCart.selectedCoffees.find(
+            (c) => c.id === id
+          );
+          const price = coffee?.price ?? 0;
+          set((state) => ({
+            ...state,
+            shoppingCart: {
+              ...state.shoppingCart,
+              selectedCoffees: state.shoppingCart.selectedCoffees.filter(
+                (c) => c.id !== id
+              ),
+              finalPrice: state.shoppingCart.finalPrice - price,
+            },
+          }));
+        },
+        clearCart: () => {
+          set((state) => ({
+            ...state,
+            shoppingCart: {
+              selectedCoffees: [],
+              finalPrice: 0,
+            },
+          }));
         },
         availableCoffees: [],
         addCoffee: (coffee) => {
@@ -109,24 +151,6 @@ export const useCoffeeStore = create(
             availableCoffees: state.availableCoffees.filter((c) => c.id !== id),
           }));
         },
-        addRequest: (request) => {
-          set((state) => ({
-            ...state,
-            requests: [...state.requests, request],
-          }));
-        },
-        editRequest: (id, request) => {
-          set((state) => ({
-            ...state,
-            requests: state.requests.map((r) => (r.id === id ? request : r)),
-          }));
-        },
-        removeRequest: (id) => {
-          set((state) => ({
-            ...state,
-            requests: state.requests.filter((r) => r.id !== id),
-          }));
-        },
       }),
       {
         name: "@Coffee-Store",
@@ -135,3 +159,19 @@ export const useCoffeeStore = create(
     )
   )
 );
+
+export const addCoffee = (coffee: Coffee) => {
+  useCoffeeStore.getState().addCoffee(coffee);
+};
+
+export const editCoffee = (id: string, coffee: Coffee) => {
+  useCoffeeStore.getState().editCoffee(id, coffee);
+};
+
+export const removeCoffee = (id: string) => {
+  useCoffeeStore.getState().removeCoffee(id);
+};
+
+export const addAvailableCoffees = (coffees: Coffee[]) => {
+  useCoffeeStore.setState({ availableCoffees: coffees });
+};

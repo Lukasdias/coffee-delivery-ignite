@@ -3,7 +3,7 @@ import shallow from "zustand/shallow";
 import { CoffeeList } from "../components/coffee-list";
 import { Presentation } from "../components/presentation";
 import { useCoffeesQuery } from "../services/queries";
-import { useCoffeeStore } from "../store/coffe";
+import { addAvailableCoffees, useCoffeeStore } from "../store/coffe";
 
 type Props = {};
 
@@ -15,16 +15,7 @@ export function Home({}: Props) {
 
   useEffect(() => {
     if (data) {
-      useCoffeeStore.setState({
-        availableCoffees: data.map((coffee) => ({
-          id: coffee.id,
-          name: coffee.title,
-          price: coffee.price,
-          tags: coffee.tags,
-          thumbnail: coffee.thumbnail.url,
-          description: coffee.description,
-        })),
-      });
+      addAvailableCoffees(data);
     }
   }, [data, error, loading]);
 
