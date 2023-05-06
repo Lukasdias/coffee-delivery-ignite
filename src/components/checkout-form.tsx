@@ -1,10 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MapPinLine } from "phosphor-react";
+import { MapPinLine, CurrencyDollar, CreditCard, Bank, CurrencyDollarSimple} from "phosphor-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { CheckoutContainer } from "./checkout-container";
 import { Input } from "./input";
+import { Button } from "./button";
+import clsx from "clsx";
 type Props = {};
 
 const schema = z.object({
@@ -37,12 +39,34 @@ const schema = z.object({
     .max(2, {
       message: "Digite somente a uf do estado",
     }),
+  paymentMethod: z.enum(["credit", "debit", "money"]),
 });
 
 type CheckoutFormData = z.infer<typeof schema>;
 
+const CheckoutFormHeader = (props: {
+  title: string;
+  subtitle: string;
+  icon: React.ReactNode;
+}) => {
+  return (
+    <div className="flex items-center gap-2 mb-2 ">
+      <div className={"flex flex-col"}>
+        <span className={"text-base text-base-text flex gap-2"}>
+          {props.icon}
+          {props.title}
+        </span>
+        <span className={"text-sm text-base-text flex gap-2"}>
+          <div className={"flex w-6 h-6"} />
+          {props.subtitle}
+        </span>
+      </div>
+    </div>
+  );
+};
+
 export function CheckoutForm({}: Props) {
-  const { register, handleSubmit, watch, formState, reset } =
+  const { register, handleSubmit, watch, formState, reset, getValues } =
     useForm<CheckoutFormData>({
       resolver: zodResolver(schema),
       defaultValues: {
@@ -53,8 +77,16 @@ export function CheckoutForm({}: Props) {
         neighborhood: "",
         city: "",
         state: "",
+        paymentMethod: 'credit'
       },
     });
+  
+  const handleSelectPaymentMethod = (paymentMethod: 'credit' | 'money' | 'debit') => { 
+    reset({
+      ...watch(),
+      paymentMethod
+    })
+  }
 
   return (
     <div className={"flex flex-col gap-2 items-start w-full"}>
@@ -63,18 +95,12 @@ export function CheckoutForm({}: Props) {
       </span>
       <CheckoutContainer>
         <div className="flex items-center gap-2 mb-2 ">
-          <div className={"flex flex-col"}>
-            <span className={"text-base text-base-text flex gap-2"}>
-              <MapPinLine className={"text-brand-yellow-dark w-6 h-6"} />
-              Endereço de entrega
-            </span>
-            <span className={"text-sm text-base-text flex gap-2"}>
-              <div className={"flex w-6 h-6"} />
-              Informe o endereço onde deseja receber seu pedido
-            </span>
-          </div>
+          <CheckoutFormHeader title={"Endereço de entrega"}
+            subtitle={"Informe o endereço onde deseja receber seu pedido"}
+            icon={<MapPinLine className={"text-brand-yellow-dark w-6 h-6"} />}
+          />
         </div>
-        <form className={"flex flex-col gap-2 flex-1"}>
+        <section className={"flex flex-col gap-2 flex-1"}>
           <Input
             type={"text"}
             placeholder={"CEP"}
@@ -111,9 +137,65 @@ export function CheckoutForm({}: Props) {
               maxWidth={"max-w-[80px]"}
             />
           </div>
-        </form>
+        </section>
       </CheckoutContainer>
-      <CheckoutContainer>CheckoutForm 2</CheckoutContainer>
+      <CheckoutContainer>
+        <CheckoutFormHeader
+          title={'Pagamento'}
+          subtitle={"O pagamento é feito na entrega. Escolha a forma que deseja pagar"}
+          icon={<CurrencyDollar className={"text-brand-purple-base w-6 h-6"} />}
+        />
+        <div className="flex w-full flex-row justify-between gap-4">
+          <Button onClick={
+            () => handleSelectPaymentMethod('credit')
+          } className={clsx("bg-base-button hover:opacity-50 flex-1 justify-center items-center", {
+            'bg-brand-purple-base': getValues('paymentMethod') === 'credit'
+          })}>
+            <CreditCard className={
+              clsx(
+                "w-4 h-4 text-brand-purple-base", {
+                  'text-white' : getValues('paymentMethod') === 'credit'
+                }
+              )
+            } weight="bold" />
+            <span className={clsx("ml-2 text-base-text text-sm", {
+              'text-white font-semibold' : getValues('paymentMethod') === 'credit'
+            })}>Cartão de crédito</span>
+          </Button>
+          <Button onClick={
+            () =>  handleSelectPaymentMethod('debit')
+          } className={clsx("bg-base-button hover:opacity-50 flex-1 justify-center items-center", {
+            'bg-brand-purple-base': getValues('paymentMethod') === 'debit'
+          })}>
+            <Bank className={
+              clsx(
+                "w-4 h-4 text-brand-purple-base", {
+                  'text-white' : getValues('paymentMethod') === 'debit'
+                }
+              )
+            } weight="bold" />
+            <span className={clsx("ml-2 text-base-text text-sm", {
+              'text-white font-semibold' : getValues('paymentMethod') === 'debit'
+            })}>Cartão de débito</span>
+          </Button>
+          <Button onClick={
+            () =>  handleSelectPaymentMethod('money')
+          } className={clsx("bg-base-button bg-base hover:opacity-50 flex-1 justify-center items-center", {
+            'bg-brand-purple-base': getValues('paymentMethod') === 'money'
+          })}>
+            <CurrencyDollarSimple className={
+              clsx(
+                "w-4 h-4 text-brand-purple-base", {
+                  'text-white' : getValues('paymentMethod') === 'money'
+                }
+              )
+            } weight="bold" />
+            <span className={clsx("ml-2 text-base-text text-sm", {
+              'text-white font-semibold' : getValues('paymentMethod') === 'money'
+            })}>Dinheiro</span>
+          </Button>
+        </div>
+      </CheckoutContainer>
     </div>
   );
 }
