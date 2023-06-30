@@ -1,23 +1,23 @@
-import React, { useEffect } from "react";
-import shallow from "zustand/shallow";
+import { useEffect } from "react";
 import { CoffeeList } from "../components/coffee-list";
 import { Presentation } from "../components/presentation";
 import { useCoffeesQuery } from "../services/queries";
-import { addAvailableCoffees, useCoffeeStore } from "../store/coffe";
+import { useCoffeeStore } from "../store/coffee-delivery";
 
 type Props = {};
 
 export function Home({}: Props) {
-  const coffeeList = useCoffeeStore((state) => state.availableCoffees, shallow);
+  const [coffeeList, fillCoffeePool] = useCoffeeStore((store) => [
+    store.state.availableCoffees,
+    store.actions.fillCoffeePool,
+  ]);
 
-  const { data, error, loading } = useCoffeesQuery();
-  console.log(data, error, loading);
+  const { data: coffees, error, loading } = useCoffeesQuery();
 
   useEffect(() => {
-    if (data) {
-      addAvailableCoffees(data);
-    }
-  }, [data, error, loading]);
+    console.log("coffees", coffees);
+    fillCoffeePool(coffees);
+  }, [coffees]);
 
   return (
     <div className={"w-full text-brand-purple-base"}>

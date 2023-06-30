@@ -1,7 +1,6 @@
-import { animated, useSpring } from "@react-spring/web";
 import { Minus, Plus, ShoppingCart } from "phosphor-react";
-import { FC, memo, useCallback, useEffect, useState } from "react";
-import { Coffee, useCoffeeStore } from "../store/coffe";
+import { FC, memo, useCallback, useState } from "react";
+import { Coffee, useCoffeeStore } from "../store/coffee-delivery";
 import { Button } from "./button";
 
 const MAX_COUNT = 10;
@@ -11,11 +10,19 @@ interface CoffeeCardProps {
   coffee: Coffee;
 }
 
-const Counter: FC<{
+export const CoffeeCounter: FC<{
+  minCount?: number;
+  maxCount?: number;
   count: number;
   increaseCount: () => void;
   decreaseCount: () => void;
-}> = ({ increaseCount, count, decreaseCount }) => {
+}> = ({
+  increaseCount,
+  count,
+  decreaseCount,
+  minCount = MIN_COUNT,
+  maxCount = MAX_COUNT,
+}) => {
   return (
     <div
       className={
@@ -24,7 +31,7 @@ const Counter: FC<{
     >
       <button
         onClick={decreaseCount}
-        disabled={count === MIN_COUNT}
+        disabled={count === minCount}
         className={"group"}
       >
         <Minus
@@ -38,7 +45,7 @@ const Counter: FC<{
       <button
         type={"button"}
         onClick={increaseCount}
-        disabled={count === MAX_COUNT}
+        disabled={count === maxCount}
         className={"group"}
       >
         <Plus
@@ -86,18 +93,14 @@ export const CoffeeCard: FC<CoffeeCardProps> = memo(({ coffee }) => {
   const [count, setCount] = useState(1);
   const { description, id, name, price, tags, thumbnail } = coffee;
 
-  const addCoffeeToChart = useCoffeeStore(
-    useCallback((state) => state.addCoffeeToCart, [])
+  const [addCoffeeToChart, getAmountOfGivenCoffeeInCart] = useCoffeeStore(
+    (store) => [
+      store.actions.addCoffeeToCart,
+      store.actions.getAmountOfGivenCoffeeInCart,
+    ]
   );
 
-  const amountOnCart = useCoffeeStore(
-    useCallback(
-      (state) =>
-        state.shoppingCart.selectedCoffees.filter((coffee) => coffee.id === id)
-          .length,
-      [id]
-    )
-  );
+  const amountOnCart = getAmountOfGivenCoffeeInCart(id);
 
   const increaseCount = useCallback(() => {
     setCount((prevCount) => prevCount + 1);
@@ -108,9 +111,7 @@ export const CoffeeCard: FC<CoffeeCardProps> = memo(({ coffee }) => {
   }, []);
 
   const onCoffeeAdd = useCallback(() => {
-    for (let i = 0; i < count; i++) {
-      addCoffeeToChart(coffee);
-    }
+    addCoffeeToChart(coffee, count);
     setCount(1);
   }, [count, coffee]);
 
@@ -151,7 +152,7 @@ export const CoffeeCard: FC<CoffeeCardProps> = memo(({ coffee }) => {
           </span>
         </div>
         <div className={"flex gap-3 ml-auto"}>
-          <Counter
+          <CoffeeCounter
             count={count}
             increaseCount={increaseCount}
             decreaseCount={decreaseCount}

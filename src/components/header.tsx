@@ -1,9 +1,7 @@
 import { animated, config, useSpring } from "@react-spring/web";
 import { MapPin, ShoppingCart } from "phosphor-react";
-import React, { useCallback } from "react";
 import { Link } from "react-router-dom";
-import shallow from "zustand/shallow";
-import { useCoffeeStore } from "../store/coffe";
+import { useCoffeeStore } from "../store/coffee-delivery";
 import LogoImage from "./../assets/logo.svg";
 import { Button } from "./button";
 import { ContentContainer } from "./content.container";
@@ -29,8 +27,7 @@ const Logo = () => {
 
 const ItemsOnCart = () => {
   const count = useCoffeeStore(
-    (state) => state.shoppingCart.selectedCoffees.length,
-    shallow
+    (store) => Object.entries(store.state.shoppingCart.coffees).length
   );
 
   const [props, api] = useSpring(

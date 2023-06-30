@@ -1,8 +1,10 @@
 import React, { forwardRef, MutableRefObject } from "react";
+import InputMask from "react-input-mask";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   floatLabel?: boolean;
   maxWidth?: string;
+  mask?: string;
 }
 
 export const Input = forwardRef<
@@ -11,7 +13,7 @@ export const Input = forwardRef<
 >(({ ...props }) => {
   return (
     <div className={`relative flex flex-1 ${props.maxWidth}`}>
-      <input
+      <InputMask
         {...props}
         className={`flex-1 items-center justify-start p-3 text-xs placeholder:text-base-label active:border-brand-yellow-dark focus:border-brand-yellow-dark border-2  outline-none rounded-default transition duration-200 bg-base-input ${
           props.maxWidth

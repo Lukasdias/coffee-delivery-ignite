@@ -1,6 +1,6 @@
 import { ApolloError } from "@apollo/client";
 import { FC, memo } from "react";
-import { Coffee } from "../store/coffe";
+import { Coffee } from "../store/coffee-delivery";
 import { CoffeeCard } from "./coffee-card";
 import { ContentContainer } from "./content.container";
 
