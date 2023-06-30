@@ -1,4 +1,3 @@
-import React from "react";
 import CheckoutForm from "../components/checkout-form";
 import CheckoutOverview from "../components/checkout-overview";
 import { ContentContainer } from "../components/content.container";
@@ -14,7 +13,7 @@ export function Checkout({}: Props) {
         }
       >
         <CheckoutForm />
-        <CheckoutOverview />
+        <CheckoutOverview onConfirmPurchase={() => undefined} />
       </div>
     </ContentContainer>
   );

@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { useState } from "react";
-import { Coffee, CoffeeVariants } from "./../store/coffe";
+import { Coffee, CoffeeVariants } from "./../store/coffee-delivery";
 
 type CoffeeQuery = {
   id: string;

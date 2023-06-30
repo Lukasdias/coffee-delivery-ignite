@@ -114,7 +114,6 @@ export function CheckoutForm({}: Props) {
             type={"text"}
             placeholder={"CEP"}
             maxWidth={"max-w-[200px]"}
-            mask="99999-999"
             {...register}
           />
           <Input type={"text"} placeholder={"Rua"} {...register} />
