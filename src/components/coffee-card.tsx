@@ -142,8 +142,8 @@ export const CoffeeCard: FC<CoffeeCardProps> = memo(({ coffee }) => {
         }
       />
       <div className={"flex flex-wrap w-full mb-4 gap-1 justify-center"}>
-        {tags.map((tag) => (
-          <CardTag tag={tag} />
+        {tags.map((tag, index) => (
+          <CardTag key={index} tag={tag} />
         ))}
       </div>
       <span

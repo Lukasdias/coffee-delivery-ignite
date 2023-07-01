@@ -12,11 +12,9 @@ interface CoffeeListProps {
 
 const CoffeeListHeader = () => {
   return (
-    <h3>
-      <h1 className={"text-base-subtitle font-bold text-3xl mb-14"}>
-        Nossos cafés
-      </h1>
-    </h3>
+    <h1 className={"text-base-subtitle font-bold text-3xl mb-14"}>
+      Nossos cafés
+    </h1>
   );
 };
 
@@ -45,8 +43,8 @@ export const CoffeeList: FC<CoffeeListProps> = memo(
       <ContentContainer>
         <CoffeeListHeader />
         <div className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"}>
-          {coffeeList.map((coffee) => (
-            <CoffeeCard coffee={coffee} />
+          {coffeeList.map((coffee, index) => (
+            <CoffeeCard key={index} coffee={coffee} />
           ))}
         </div>
       </ContentContainer>

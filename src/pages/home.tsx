@@ -15,7 +15,6 @@ export function Home({}: Props) {
   const { data: coffees, error, loading } = useCoffeesQuery();
 
   useEffect(() => {
-    console.log("coffees", coffees);
     fillCoffeePool(coffees);
   }, [coffees]);
 
