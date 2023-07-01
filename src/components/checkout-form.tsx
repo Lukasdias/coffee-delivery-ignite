@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import {
   Bank,
@@ -7,48 +6,16 @@ import {
   CurrencyDollarSimple,
   MapPinLine,
 } from "phosphor-react";
-import React from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import React, { useEffect } from "react";
+import { UseFormReturn } from "react-hook-form";
+import { CheckoutFormData } from "../pages/checkout";
 import { Button } from "./button";
 import { CheckoutContainer } from "./checkout-container";
 import { Input } from "./input";
-type Props = {};
 
-const schema = z.object({
-  cep: z
-    .string()
-    .min(8, {
-      message: "CEP deve conter 8 dígitos",
-    })
-    .max(8, {
-      message: "CEP deve conter 8 dígitos",
-    }),
-  street: z.string().min(1, {
-    message: "Rua deve conter pelo menos 1 caractere",
-  }),
-  number: z.number(),
-  complement: z.string().min(1, {
-    message: "Complemento deve conter pelo menos 1 caractere",
-  }),
-  neighborhood: z.string().min(1, {
-    message: "Bairro deve conter pelo menos 1 caractere",
-  }),
-  city: z.string().min(1, {
-    message: "Cidade deve conter pelo menos 1 caractere",
-  }),
-  state: z
-    .string()
-    .min(2, {
-      message: "Digite somente a uf do estado",
-    })
-    .max(2, {
-      message: "Digite somente a uf do estado",
-    }),
-  paymentMethod: z.enum(["credit", "debit", "money"]),
-});
-
-type CheckoutFormData = z.infer<typeof schema>;
+type Props = {
+  form: UseFormReturn<CheckoutFormData>;
+};
 
 const CheckoutFormHeader = (props: {
   title: string;
@@ -71,30 +38,21 @@ const CheckoutFormHeader = (props: {
   );
 };
 
-export function CheckoutForm({}: Props) {
-  const { register, handleSubmit, watch, formState, reset, getValues } =
-    useForm<CheckoutFormData>({
-      resolver: zodResolver(schema),
-      defaultValues: {
-        cep: "",
-        street: "",
-        number: 0,
-        complement: "",
-        neighborhood: "",
-        city: "",
-        state: "",
-        paymentMethod: "credit",
-      },
-    });
+export function CheckoutForm({ form }: Props) {
+  const { register, formState, getValues, setValue, clearErrors } = form;
 
   const handleSelectPaymentMethod = (
     paymentMethod: "credit" | "money" | "debit"
   ) => {
-    reset({
-      ...watch(),
-      paymentMethod,
-    });
+    setValue("paymentMethod", paymentMethod);
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      clearErrors();
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [formState.errors]);
 
   return (
     <div className={"flex flex-col gap-2 items-start w-full"}>
@@ -114,37 +72,82 @@ export function CheckoutForm({}: Props) {
             type={"text"}
             placeholder={"CEP"}
             maxWidth={"max-w-[200px]"}
-            {...register}
+            {...register("cep")}
           />
+          {formState.errors.cep && (
+            <span className={"text-red-500 text-sm"}>
+              {formState.errors.cep.message}
+            </span>
+          )}
           <Input type={"text"} placeholder={"Rua"} {...register} />
+          {formState.errors.street && (
+            <span className={"text-red-500 text-sm"}>
+              {formState.errors.street.message}
+            </span>
+          )}
           <div className={"flex gap-2 w-full"}>
-            <Input
-              type={"text"}
-              placeholder={"Número"}
-              maxWidth={"max-w-[175px]"}
-              {...register}
-            />
-            <Input
-              type={"text"}
-              placeholder={"Complemento"}
-              floatLabel
-              {...register}
-            />
+            <div>
+              <Input
+                type={"text"}
+                placeholder={"Número"}
+                maxWidth={"max-w-[175px]"}
+                {...register("number")}
+              />
+              {formState.errors.number && (
+                <span className={"text-red-500 text-sm"}>
+                  {formState.errors.number.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <Input
+                type={"text"}
+                placeholder={"Complemento"}
+                floatLabel
+                {...register("complement")}
+              />
+              {formState.errors.complement && (
+                <span className={"text-red-500 text-sm"}>
+                  {formState.errors.complement.message}
+                </span>
+              )}
+            </div>
           </div>
           <div className={"flex gap-2 w-full"}>
-            <Input
-              type={"text"}
-              placeholder={"Bairro"}
-              {...register}
-              maxWidth={"max-w-[200px]"}
-            />
-            <Input type={"text"} placeholder={"Cidade"} {...register} />
-            <Input
-              type={"text"}
-              placeholder={"UF"}
-              {...register}
-              maxWidth={"max-w-[80px]"}
-            />
+            <div>
+              <Input
+                type={"text"}
+                placeholder={"Bairro"}
+                {...register("neighborhood")}
+                maxWidth={"max-w-[200px]"}
+              />
+              {formState.errors.neighborhood && (
+                <span className={"text-red-500 text-sm"}>
+                  {formState.errors.neighborhood.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <Input type={"text"} placeholder={"Cidade"} {...register} />
+              {formState.errors.city && (
+                <span className={"text-red-500 text-sm"}>
+                  {formState.errors.city.message}
+                </span>
+              )}
+            </div>
+            <div>
+              <Input
+                type={"text"}
+                placeholder={"UF"}
+                {...register("state")}
+                maxWidth={"max-w-[80px]"}
+              />
+              {formState.errors.state && (
+                <span className={"text-red-500 text-sm"}>
+                  {formState.errors.state.message}
+                </span>
+              )}
+            </div>
           </div>
         </section>
       </CheckoutContainer>

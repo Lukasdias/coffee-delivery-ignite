@@ -1,6 +1,6 @@
-import { animated, useSpring } from "@react-spring/web";
+import { motion } from "framer-motion";
 import { Coffee, Package, ShoppingCart, Timer } from "phosphor-react";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import Blur from "./../assets/blur-background.svg";
 import PresentationImageSrc from "./../assets/landing-page-cover.svg";
 import { ContentContainer } from "./content.container";
@@ -25,12 +25,12 @@ const PresentationText = () => {
 
 const Advantage = ({ icon, title }: AdvantageProps) => {
   return (
-    <animated.div className={"flex items-center gap-4"}>
+    <motion.div className={"flex items-center gap-4"}>
       {icon}
       <div>
         <p className={"text-gray-500"}>{title}</p>
       </div>
-    </animated.div>
+    </motion.div>
   );
 };
 
@@ -42,19 +42,14 @@ const AdvantageRibbon: FC<{
     | "bg-brand-purple-base";
   children: React.ReactNode;
 }> = ({ variant, children }) => {
-  const [props, api] = useSpring(() => ({
-    from: { scale: 0 },
-    to: { scale: 1 },
-  }));
   return (
-    <animated.div
+    <motion.div
       className={`flex items-center justify-center rounded-full w-8 h-8 ${variant}`}
-      style={{
-        transform: props.scale.to((scale) => `scale(${scale})`),
-      }}
+      initial={{ scale: 0 }}
+      animate={{ scale: 1, transition: { delay: 0.2 } }}
     >
       {children}
-    </animated.div>
+    </motion.div>
   );
 };
 

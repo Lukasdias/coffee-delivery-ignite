@@ -1,6 +1,7 @@
 import create from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import { CheckoutFormData } from "../pages/checkout";
 
 export type CoffeeVariants =
   | "TRADICIONAL"
@@ -14,16 +15,6 @@ export type PaymentVariants =
   | "CARTÃO DE DÉBITO"
   | "CARTÃO DE CRÉDITO"
   | "SEM PAGAMENTO";
-
-export type AddressFormSchema = {
-  cep: string;
-  street: string;
-  number?: string;
-  complement?: string;
-  neighborhood: string;
-  city: string;
-  uf: string;
-};
 
 export type PaymentFormSchema = {
   variant: PaymentVariants;
@@ -62,10 +53,17 @@ export type ShoppingCartActions = {
   removeCoffeeFromCart: (id: string) => void;
   clearCart: () => void;
   getAmountOfGivenCoffeeInCart: (id: string) => number;
+  submitOrder: (address: CheckoutFormData) => void;
 };
 
 type State = {
   availableCoffees: Coffee[];
+  currentRequest: {
+    coffees: {
+      [key: string]: CoffeeOnCart;
+    } | null;
+    address: CheckoutFormData | null;
+  };
   shoppingCart: ShoppingCartState;
 };
 
@@ -87,6 +85,10 @@ export const useCoffeeStore = create(
           shoppingCart: {
             coffees: {},
             finalPrice: 0,
+          },
+          currentRequest: {
+            coffees: {},
+            address: null,
           },
         },
         actions: {
@@ -163,6 +165,16 @@ export const useCoffeeStore = create(
             set((store) => {
               store.state.shoppingCart.coffees = {};
               store.state.shoppingCart.finalPrice = 0;
+            });
+          },
+          submitOrder: (address) => {
+            if (Object.keys(get().state.shoppingCart.coffees).length === 0)
+              return;
+            if (!address) return;
+            set((store) => {
+              store.state.currentRequest.coffees =
+                store.state.shoppingCart.coffees;
+              store.state.currentRequest.address = address;
             });
           },
         },

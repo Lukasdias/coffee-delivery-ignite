@@ -1,4 +1,3 @@
-import { animated, config, useSpring } from "@react-spring/web";
 import { MapPin, ShoppingCart } from "phosphor-react";
 import { Link } from "react-router-dom";
 import { useCoffeeStore } from "../store/coffee-delivery";
@@ -30,31 +29,13 @@ const ItemsOnCart = () => {
     (store) => Object.entries(store.state.shoppingCart.coffees).length
   );
 
-  const [props, api] = useSpring(
-    () => ({
-      from: { num: 0, y: 50, scale: 0.2 },
-      to: { num: count, y: 0, scale: 1 },
-      config: config.stiff,
-    }),
-    [count]
-  );
-
   return (
     <div
       className={
         "absolute -top-2 -right-2 rounded-full flex justify-center items-center bg-brand-yellow-dark w-6 h-6 overflow-hidden"
       }
     >
-      <animated.text
-        className={"text-sm text-white font-bold"}
-        style={{
-          transform: props.y.to((y) => `translateY(${y}px)`),
-          transformOrigin: "center",
-          scale: props.scale,
-        }}
-      >
-        {props.num.to((n) => Math.round(n))}
-      </animated.text>
+      <span className={"text-sm text-white font-bold"}>{count}</span>
     </div>
   );
 };
