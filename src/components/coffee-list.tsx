@@ -44,7 +44,7 @@ export const CoffeeList: FC<CoffeeListProps> = memo(
         <CoffeeListHeader />
         <div className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"}>
           {coffeeList.map((coffee, index) => (
-            <CoffeeCard key={index} coffee={coffee} />
+            <CoffeeCard key={index} coffee={coffee} itemIndex={index} />
           ))}
         </div>
       </ContentContainer>

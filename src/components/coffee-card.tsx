@@ -8,6 +8,7 @@ const MAX_COUNT = 10;
 const MIN_COUNT = 1;
 
 interface CoffeeCardProps {
+  itemIndex: number;
   coffee: Coffee;
 }
 
@@ -90,7 +91,7 @@ const CardTag = ({ tag }: { tag: string }) => {
   );
 };
 
-export const CoffeeCard: FC<CoffeeCardProps> = memo(({ coffee }) => {
+export const CoffeeCard: FC<CoffeeCardProps> = memo(({ coffee, itemIndex }) => {
   const [count, setCount] = useState(1);
   const { description, id, name, price, tags, thumbnail } = coffee;
 
@@ -117,59 +118,73 @@ export const CoffeeCard: FC<CoffeeCardProps> = memo(({ coffee }) => {
   }, [count, coffee]);
 
   return (
-    <div
-      className={
-        "rounded-tl-xs py-[74px] mt-[74px] max-w-[265px] rounded-tr-xl rounded-bl-xl rounded-br-xs bg-base-card px-5 pb-5 relative flex flex-col"
-      }
-    >
-      <div className={"absolute -top-2 -right-2"}>
-        <AnimatePresence>
-          {amountOnCart > 0 && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5, y: 200 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-            >
-              <CardTag tag={amountOnCart.toString()} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-      <img
-        src={thumbnail}
-        alt={name}
-        className={
-          "w-[120px] h-[120px] absolute -top-14 left-1/2 translate-x-[-50%]"
-        }
-      />
-      <div className={"flex flex-wrap w-full mb-4 gap-1 justify-center"}>
-        {tags.map((tag, index) => (
-          <CardTag key={index} tag={tag} />
-        ))}
-      </div>
-      <span
-        className={
-          "font-baloo-2 text-xl text-base-subtitle font-bold mb-2 text-center"
-        }
-      >
-        {name}
-      </span>
-      <span className={"text-base-label mb-8 text-center"}>{description}</span>
-      <div className={"gap-6 w-full flex mt-auto"}>
-        <div className={"flex items-center gap-1"}>
-          <span className={"text-base-text"}>R$</span>
-          <span className={"text-base-text font-bold font-baloo-2 text-2xl"}>
-            {price}
-          </span>
-        </div>
-        <div className={"flex gap-3 ml-auto"}>
-          <CoffeeCounter
-            count={count}
-            increaseCount={increaseCount}
-            decreaseCount={decreaseCount}
+    <AnimatePresence>
+      {coffee && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5, y: 200 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{
+            duration: 0.5,
+            delay: 0.1 * itemIndex,
+          }}
+          className={
+            "rounded-tl-xs py-[74px] mt-[74px] max-w-[265px] rounded-tr-xl rounded-bl-xl rounded-br-xs bg-base-card px-5 pb-5 relative flex flex-col"
+          }
+        >
+          <div className={"absolute -top-2 -right-2"}>
+            <AnimatePresence>
+              {amountOnCart > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5, y: 200 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                >
+                  <CardTag tag={amountOnCart.toString()} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          <img
+            src={thumbnail}
+            alt={name}
+            className={
+              "w-[120px] h-[120px] absolute -top-14 left-1/2 translate-x-[-50%]"
+            }
           />
-          <ShoppingCartButton onClick={onCoffeeAdd} />
-        </div>
-      </div>
-    </div>
+          <div className={"flex flex-wrap w-full mb-4 gap-1 justify-center"}>
+            {tags.map((tag, index) => (
+              <CardTag key={index} tag={tag} />
+            ))}
+          </div>
+          <span
+            className={
+              "font-baloo-2 text-xl text-base-subtitle font-bold mb-2 text-center"
+            }
+          >
+            {name}
+          </span>
+          <span className={"text-base-label mb-8 text-center"}>
+            {description}
+          </span>
+          <div className={"gap-6 w-full flex mt-auto"}>
+            <div className={"flex items-center gap-1"}>
+              <span className={"text-base-text"}>R$</span>
+              <span
+                className={"text-base-text font-bold font-baloo-2 text-2xl"}
+              >
+                {price}
+              </span>
+            </div>
+            <div className={"flex gap-3 ml-auto"}>
+              <CoffeeCounter
+                count={count}
+                increaseCount={increaseCount}
+                decreaseCount={decreaseCount}
+              />
+              <ShoppingCartButton onClick={onCoffeeAdd} />
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 });
