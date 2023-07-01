@@ -45,15 +45,17 @@ export function CheckoutOverview({ onConfirmPurchase }: Props) {
           {Object.entries(cart.coffees).length > 0 ? (
             <section className="flex-1  w-full flex flex-col max-h-[225px] overflow-y-auto overflow-x-hidden">
               {parsedCart.map((coffee, index) => (
-                <>
+                <div
+                  key={`${coffee.id}-${index}`}
+                  className="flex flex-col gap-2"
+                >
                   <ShoppingCardItem
-                    key={`${coffee.id}-${index}`}
                     item={coffee}
                     qty={coffee.qty ?? 0}
                     onEditCoffeeFromCart={editCoffeeFromCart}
                   />
                   <Divider />
-                </>
+                </div>
               ))}
             </section>
           ) : (

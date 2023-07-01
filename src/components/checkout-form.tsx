@@ -38,8 +38,15 @@ const CheckoutFormHeader = (props: {
   );
 };
 
-export function CheckoutForm({ form }: Props) {
-  const { register, formState, getValues, setValue, clearErrors, watch } = form;
+export const CheckoutForm = ({ form }: Props) => {
+  const {
+    register,
+    formState: { errors },
+    getValues,
+    setValue,
+    clearErrors,
+    watch,
+  } = form;
 
   const handleSelectPaymentMethod = (
     paymentMethod: "credit" | "money" | "debit"
@@ -56,10 +63,17 @@ export function CheckoutForm({ form }: Props) {
       clearErrors();
     }, 3000);
     return () => clearInterval(interval);
-  }, [formState.errors]);
+  }, [errors]);
+
+  const onSubmit = (data: CheckoutFormData) => {
+    console.log(data);
+  };
 
   return (
-    <div className={"flex flex-col gap-2 items-start w-full"}>
+    <form
+      className={"flex flex-col gap-2 items-start w-full"}
+      onSubmit={form.handleSubmit(onSubmit)}
+    >
       <span className={"font-baloo-2 font-bold text-lg"}>
         Complete seu pedido
       </span>
@@ -75,14 +89,12 @@ export function CheckoutForm({ form }: Props) {
           <Input
             type={"text"}
             placeholder={"CEP"}
-            maxWidth={"max-w-[200px]"}
+            maxSize={200}
             value={getValues("cep")}
             {...register("cep")}
           />
-          {formState.errors.cep && (
-            <span className={"text-red-500 text-sm"}>
-              {formState.errors.cep.message}
-            </span>
+          {errors.cep && (
+            <span className={"text-red-500 text-sm"}>{errors.cep.message}</span>
           )}
           <Input
             type={"text"}
@@ -90,9 +102,9 @@ export function CheckoutForm({ form }: Props) {
             value={getValues("street")}
             {...register("street")}
           />
-          {formState.errors.street && (
+          {errors.street && (
             <span className={"text-red-500 text-sm"}>
-              {formState.errors.street.message}
+              {errors.street.message}
             </span>
           )}
           <div className={"flex gap-2 w-full"}>
@@ -100,13 +112,13 @@ export function CheckoutForm({ form }: Props) {
               <Input
                 type={"text"}
                 placeholder={"Número"}
-                maxWidth={"max-w-[175px]"}
+                maxSize={175}
                 value={getValues("number")}
                 {...register("number")}
               />
-              {formState.errors.number && (
+              {errors.number && (
                 <span className={"text-red-500 text-sm"}>
-                  {formState.errors.number.message}
+                  {errors.number.message}
                 </span>
               )}
             </div>
@@ -118,9 +130,9 @@ export function CheckoutForm({ form }: Props) {
                 value={getValues("complement")}
                 {...register("complement")}
               />
-              {formState.errors.complement && (
+              {errors.complement && (
                 <span className={"text-red-500 text-sm"}>
-                  {formState.errors.complement.message}
+                  {errors.complement.message}
                 </span>
               )}
             </div>
@@ -132,11 +144,11 @@ export function CheckoutForm({ form }: Props) {
                 placeholder={"Bairro"}
                 value={getValues("neighborhood")}
                 {...register("neighborhood")}
-                maxWidth={"max-w-[200px]"}
+                maxSize={200}
               />
-              {formState.errors.neighborhood && (
+              {errors.neighborhood && (
                 <span className={"text-red-500 text-sm"}>
-                  {formState.errors.neighborhood.message}
+                  {errors.neighborhood.message}
                 </span>
               )}
             </div>
@@ -147,9 +159,9 @@ export function CheckoutForm({ form }: Props) {
                 value={getValues("city")}
                 {...register("city")}
               />
-              {formState.errors.city && (
+              {errors.city && (
                 <span className={"text-red-500 text-sm"}>
-                  {formState.errors.city.message}
+                  {errors.city.message}
                 </span>
               )}
             </div>
@@ -159,11 +171,11 @@ export function CheckoutForm({ form }: Props) {
                 placeholder={"UF"}
                 value={getValues("state")}
                 {...register("state")}
-                maxWidth={"max-w-[80px]"}
+                maxSize={80}
               />
-              {formState.errors.state && (
+              {errors.state && (
                 <span className={"text-red-500 text-sm"}>
-                  {formState.errors.state.message}
+                  {errors.state.message}
                 </span>
               )}
             </div>
@@ -250,8 +262,8 @@ export function CheckoutForm({ form }: Props) {
           </Button>
         </div>
       </CheckoutContainer>
-    </div>
+    </form>
   );
-}
+};
 
 export default CheckoutForm;

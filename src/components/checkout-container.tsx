@@ -1,8 +1,8 @@
 import React from "react";
 
-type Props = {
+interface Props {
   children: React.ReactNode;
-};
+}
 
 export function CheckoutContainer({ children }: Props) {
   return (
