@@ -6,35 +6,21 @@ import CheckoutOverview from "../components/checkout-overview";
 import { ContentContainer } from "../components/content.container";
 
 export const CheckoutFormSchema = z.object({
-  cep: z
-    .string()
-    .min(8, {
-      message: "CEP deve conter 8 dígitos",
-    })
-    .max(8, {
-      message: "CEP deve conter 8 dígitos",
-    }),
+  cep: z.string().min(1, {
+    message: "CEP deve conter pelo menos 1 caractere",
+  }),
   street: z.string().min(1, {
     message: "Rua deve conter pelo menos 1 caractere",
   }),
-  number: z.number(),
-  complement: z.string().min(1, {
-    message: "Complemento deve conter pelo menos 1 caractere",
-  }),
+  number: z.number().optional(),
+  complement: z.string().optional(),
   neighborhood: z.string().min(1, {
     message: "Bairro deve conter pelo menos 1 caractere",
   }),
   city: z.string().min(1, {
     message: "Cidade deve conter pelo menos 1 caractere",
   }),
-  state: z
-    .string()
-    .min(2, {
-      message: "Digite somente a uf do estado",
-    })
-    .max(2, {
-      message: "Digite somente a uf do estado",
-    }),
+  state: z.string(),
   paymentMethod: z.enum(["credit", "debit", "money"]),
 });
 
@@ -44,13 +30,13 @@ export function Checkout() {
   const form = useForm<CheckoutFormData>({
     resolver: zodResolver(CheckoutFormSchema),
     defaultValues: {
-      cep: "",
-      street: "",
-      number: 0,
+      cep: "90250-440",
+      street: "Rua João Daniel Martinelli",
+      number: 102,
       complement: "",
-      neighborhood: "",
-      city: "",
-      state: "",
+      neighborhood: "Farrapos",
+      city: "Porto Alegre",
+      state: "RS",
       paymentMethod: "credit",
     },
   });

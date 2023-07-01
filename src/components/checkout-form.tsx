@@ -76,6 +76,7 @@ export function CheckoutForm({ form }: Props) {
             type={"text"}
             placeholder={"CEP"}
             maxWidth={"max-w-[200px]"}
+            value={getValues("cep")}
             {...register("cep")}
           />
           {formState.errors.cep && (
@@ -83,7 +84,12 @@ export function CheckoutForm({ form }: Props) {
               {formState.errors.cep.message}
             </span>
           )}
-          <Input type={"text"} placeholder={"Rua"} {...register} />
+          <Input
+            type={"text"}
+            placeholder={"Rua"}
+            value={getValues("street")}
+            {...register("street")}
+          />
           {formState.errors.street && (
             <span className={"text-red-500 text-sm"}>
               {formState.errors.street.message}
@@ -95,6 +101,7 @@ export function CheckoutForm({ form }: Props) {
                 type={"text"}
                 placeholder={"Número"}
                 maxWidth={"max-w-[175px]"}
+                value={getValues("number")}
                 {...register("number")}
               />
               {formState.errors.number && (
@@ -103,11 +110,12 @@ export function CheckoutForm({ form }: Props) {
                 </span>
               )}
             </div>
-            <div>
+            <div className="w-full">
               <Input
                 type={"text"}
                 placeholder={"Complemento"}
                 floatLabel
+                value={getValues("complement")}
                 {...register("complement")}
               />
               {formState.errors.complement && (
@@ -122,6 +130,7 @@ export function CheckoutForm({ form }: Props) {
               <Input
                 type={"text"}
                 placeholder={"Bairro"}
+                value={getValues("neighborhood")}
                 {...register("neighborhood")}
                 maxWidth={"max-w-[200px]"}
               />
@@ -132,7 +141,12 @@ export function CheckoutForm({ form }: Props) {
               )}
             </div>
             <div>
-              <Input type={"text"} placeholder={"Cidade"} {...register} />
+              <Input
+                type={"text"}
+                placeholder={"Cidade"}
+                value={getValues("city")}
+                {...register("city")}
+              />
               {formState.errors.city && (
                 <span className={"text-red-500 text-sm"}>
                   {formState.errors.city.message}
@@ -143,6 +157,7 @@ export function CheckoutForm({ form }: Props) {
               <Input
                 type={"text"}
                 placeholder={"UF"}
+                value={getValues("state")}
                 {...register("state")}
                 maxWidth={"max-w-[80px]"}
               />
