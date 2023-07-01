@@ -39,13 +39,17 @@ const CheckoutFormHeader = (props: {
 };
 
 export function CheckoutForm({ form }: Props) {
-  const { register, formState, getValues, setValue, clearErrors } = form;
+  const { register, formState, getValues, setValue, clearErrors, watch } = form;
 
   const handleSelectPaymentMethod = (
     paymentMethod: "credit" | "money" | "debit"
   ) => {
     setValue("paymentMethod", paymentMethod);
   };
+
+  const isCreditCardSelected = watch("paymentMethod") === "credit";
+  const isDebitCardSelected = watch("paymentMethod") === "debit";
+  const isMoneySelected = watch("paymentMethod") === "money";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -165,20 +169,19 @@ export function CheckoutForm({ form }: Props) {
             className={clsx(
               "bg-base-button hover:opacity-50 flex-1 justify-center items-center",
               {
-                "bg-brand-purple-base": getValues("paymentMethod") === "credit",
+                "bg-brand-purple-base": isCreditCardSelected,
               }
             )}
           >
             <CreditCard
               className={clsx("w-4 h-4 text-brand-purple-base", {
-                "text-white": getValues("paymentMethod") === "credit",
+                "text-white": isCreditCardSelected,
               })}
               weight="bold"
             />
             <span
               className={clsx("ml-2 text-base-text text-sm", {
-                "text-white font-semibold":
-                  getValues("paymentMethod") === "credit",
+                "text-white font-semibold": isCreditCardSelected,
               })}
             >
               Cartão de crédito
@@ -189,20 +192,19 @@ export function CheckoutForm({ form }: Props) {
             className={clsx(
               "bg-base-button hover:opacity-50 flex-1 justify-center items-center",
               {
-                "bg-brand-purple-base": getValues("paymentMethod") === "debit",
+                "bg-brand-purple-base": isDebitCardSelected,
               }
             )}
           >
             <Bank
               className={clsx("w-4 h-4 text-brand-purple-base", {
-                "text-white": getValues("paymentMethod") === "debit",
+                "text-white": isDebitCardSelected,
               })}
               weight="bold"
             />
             <span
               className={clsx("ml-2 text-base-text text-sm", {
-                "text-white font-semibold":
-                  getValues("paymentMethod") === "debit",
+                "text-white font-semibold": isDebitCardSelected,
               })}
             >
               Cartão de débito
@@ -213,20 +215,19 @@ export function CheckoutForm({ form }: Props) {
             className={clsx(
               "bg-base-button bg-base hover:opacity-50 flex-1 justify-center items-center",
               {
-                "bg-brand-purple-base": getValues("paymentMethod") === "money",
+                "bg-brand-purple-base": isMoneySelected,
               }
             )}
           >
             <CurrencyDollarSimple
               className={clsx("w-4 h-4 text-brand-purple-base", {
-                "text-white": getValues("paymentMethod") === "money",
+                "text-white": isMoneySelected,
               })}
               weight="bold"
             />
             <span
               className={clsx("ml-2 text-base-text text-sm", {
-                "text-white font-semibold":
-                  getValues("paymentMethod") === "money",
+                "text-white font-semibold": isMoneySelected,
               })}
             >
               Dinheiro

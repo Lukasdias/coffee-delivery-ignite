@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { Minus, Plus, ShoppingCart } from "phosphor-react";
 import { FC, memo, useCallback, useState } from "react";
 import { Coffee, useCoffeeStore } from "../store/coffee-delivery";
@@ -122,7 +123,16 @@ export const CoffeeCard: FC<CoffeeCardProps> = memo(({ coffee }) => {
       }
     >
       <div className={"absolute -top-2 -right-2"}>
-        {amountOnCart > 0 && <CardTag tag={amountOnCart.toString()} />}
+        <AnimatePresence>
+          {amountOnCart > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5, y: 200 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+            >
+              <CardTag tag={amountOnCart.toString()} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       <img
         src={thumbnail}
