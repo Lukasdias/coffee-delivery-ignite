@@ -15,9 +15,9 @@ module.exports = {
     },
     fontFamily: {
       "baloo-2": '["Baloo 2", cursive]',
-      serif: ["Roboto", "serif"],
-      sans: ["Roboto", "sans-serif"],
-      mono: ["Roboto", "monospace"],
+      serif: '["Roboto", serif]',
+      sans: '["Roboto", sans-serif]',
+      mono: '["Roboto Mono", monospace]',
     },
     borderRadius: {
       none: "0",

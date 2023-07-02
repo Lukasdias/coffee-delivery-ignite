@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useCoffeeStore } from "../store/coffee-delivery";
 import LogoImage from "./../assets/logo.svg";
 import { Button } from "./button";
-import { ContentContainer } from "./content.container";
 
 type Props = {};
 
@@ -69,11 +68,11 @@ const Actions = () => {
 
 export const Header = (props: Props) => {
   return (
-    <ContentContainer>
+    <header className="w-full lg:w-10/12 flex mx-auto">
       <div className={"flex w-full justify-between"}>
         <Logo />
         <Actions />
       </div>
-    </ContentContainer>
+    </header>
   );
 };

@@ -6,7 +6,7 @@ export const ContentContainer: FC<{
 }> = ({ children }) => {
   return (
     <motion.div
-      className={"w-full lg:w-10/12 flex justify-between mx-auto flex-col"}
+      className={"w-full lg:w-10/12 flex flex-1 mx-auto"}
       initial={{
         opacity: 0,
         transform: "translateY(20px)",
