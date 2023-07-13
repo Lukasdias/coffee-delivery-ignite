@@ -60,3 +60,5 @@ export const CoffeeList: FC<CoffeeListProps> = memo(
         );
     }
 );
+
+export default CoffeeList;
