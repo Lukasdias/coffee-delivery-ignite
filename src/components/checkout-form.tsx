@@ -12,6 +12,10 @@ import { Address } from "../pages/checkout";
 import { Button } from "./button";
 import { CheckoutContainer } from "./checkout-container";
 import { Input } from "./input";
+import { PaymentMethodButton } from "./payment-method";
+import { AnimatePresence, motion } from "framer-motion";
+import { useCoffeeRequestsStore } from "../store/coffee-requests";
+import { Coffee, useCoffeeCart } from "../store/coffee-cart";
 
 type Props = {
     form: UseFormReturn<Address>;
@@ -38,6 +42,27 @@ const CheckoutFormHeader = (props: {
     );
 };
 
+const CheckoutFormInputError = (props: {
+    message: string | undefined;
+    isVisible: boolean;
+}) => {
+    return (
+        <AnimatePresence>
+            {props.isVisible && (
+                <motion.span
+                    className={"text-red-500 text-sm"}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    {props.message}
+                </motion.span>
+            )}
+        </AnimatePresence>
+    );
+};
+
 export const CheckoutForm = ({ form }: Props) => {
     const {
         register,
@@ -58,22 +83,8 @@ export const CheckoutForm = ({ form }: Props) => {
     const isDebitCardSelected = watch("paymentMethod") === "debit";
     const isMoneySelected = watch("paymentMethod") === "money";
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            clearErrors();
-        }, 3000);
-        return () => clearInterval(interval);
-    }, [errors]);
-
-    const onSubmit = (data: Address) => {
-        console.log(data);
-    };
-
     return (
-        <form
-            className={"flex flex-col gap-2 items-start w-full"}
-            onSubmit={form.handleSubmit(onSubmit)}
-        >
+        <form className={"flex flex-col gap-2 items-start w-full"}>
             <span className={"font-baloo-2 font-bold text-lg"}>
                 Complete seu pedido
             </span>
@@ -96,53 +107,55 @@ export const CheckoutForm = ({ form }: Props) => {
                         type={"text"}
                         placeholder={"CEP"}
                         maxSize={200}
-                        value={getValues("cep")}
-                        {...register("cep")}
+                        register={register("cep")}
+                        ErrorFallback={
+                            <CheckoutFormInputError
+                                isVisible={!!errors.cep}
+                                message={errors.cep?.message}
+                            />
+                        }
                     />
-                    {errors.cep && (
-                        <span className={"text-red-500 text-sm"}>
-                            {errors.cep.message}
-                        </span>
-                    )}
+
                     <Input
                         type={"text"}
                         placeholder={"Rua"}
-                        value={getValues("street")}
-                        {...register("street")}
+                        register={register("street")}
+                        ErrorFallback={
+                            <CheckoutFormInputError
+                                isVisible={!!errors.street}
+                                message={errors.street?.message}
+                            />
+                        }
                     />
-                    {errors.street && (
-                        <span className={"text-red-500 text-sm"}>
-                            {errors.street.message}
-                        </span>
-                    )}
+
                     <div className={"flex gap-2 w-full"}>
                         <div>
                             <Input
                                 type={"text"}
                                 placeholder={"Número"}
                                 maxSize={175}
-                                value={getValues("number")}
-                                {...register("number")}
+                                register={register("number")}
+                                ErrorFallback={
+                                    <CheckoutFormInputError
+                                        isVisible={!!errors.number}
+                                        message={errors.number?.message}
+                                    />
+                                }
                             />
-                            {errors.number && (
-                                <span className={"text-red-500 text-sm"}>
-                                    {errors.number.message}
-                                </span>
-                            )}
                         </div>
                         <div className="w-full">
                             <Input
                                 type={"text"}
                                 placeholder={"Complemento"}
                                 floatLabel
-                                value={getValues("complement")}
-                                {...register("complement")}
+                                register={register("complement")}
+                                ErrorFallback={
+                                    <CheckoutFormInputError
+                                        isVisible={!!errors.complement}
+                                        message={errors.complement?.message}
+                                    />
+                                }
                             />
-                            {errors.complement && (
-                                <span className={"text-red-500 text-sm"}>
-                                    {errors.complement.message}
-                                </span>
-                            )}
                         </div>
                     </div>
                     <div className={"flex gap-2 w-full"}>
@@ -150,35 +163,40 @@ export const CheckoutForm = ({ form }: Props) => {
                             <Input
                                 type={"text"}
                                 placeholder={"Bairro"}
-                                value={getValues("neighborhood")}
-                                {...register("neighborhood")}
+                                register={register("neighborhood")}
                                 maxSize={200}
+                                ErrorFallback={
+                                    <CheckoutFormInputError
+                                        isVisible={!!errors.neighborhood}
+                                        message={errors.neighborhood?.message}
+                                    />
+                                }
                             />
-                            {errors.neighborhood && (
-                                <span className={"text-red-500 text-sm"}>
-                                    {errors.neighborhood.message}
-                                </span>
-                            )}
                         </div>
                         <div>
                             <Input
                                 type={"text"}
                                 placeholder={"Cidade"}
-                                value={getValues("city")}
-                                {...register("city")}
+                                register={register("city")}
+                                ErrorFallback={
+                                    <CheckoutFormInputError
+                                        isVisible={!!errors.city}
+                                        message={errors.city?.message}
+                                    />
+                                }
                             />
-                            {errors.city && (
-                                <span className={"text-red-500 text-sm"}>
-                                    {errors.city.message}
-                                </span>
-                            )}
                         </div>
                         <div>
                             <Input
                                 type={"text"}
                                 placeholder={"UF"}
-                                value={getValues("state")}
-                                {...register("state")}
+                                register={register("state")}
+                                ErrorFallback={
+                                    <CheckoutFormInputError
+                                        isVisible={!!errors.state}
+                                        message={errors.state?.message}
+                                    />
+                                }
                                 maxSize={80}
                             />
                             {errors.state && (
@@ -203,76 +221,32 @@ export const CheckoutForm = ({ form }: Props) => {
                     }
                 />
                 <div className="flex w-full flex-row justify-between gap-4">
-                    <Button
-                        onClick={() => handleSelectPaymentMethod("credit")}
-                        className={clsx(
-                            "bg-base-button hover:opacity-50 flex-1 justify-center items-center",
-                            {
-                                "bg-brand-purple-base": isCreditCardSelected,
-                            }
-                        )}
-                    >
-                        <CreditCard
-                            className={clsx("w-4 h-4 text-brand-purple-base", {
-                                "text-white": isCreditCardSelected,
-                            })}
-                            weight="bold"
-                        />
-                        <span
-                            className={clsx("ml-2 text-base-text text-sm", {
-                                "text-white font-semibold":
-                                    isCreditCardSelected,
-                            })}
-                        >
-                            Cartão de crédito
-                        </span>
-                    </Button>
-                    <Button
-                        onClick={() => handleSelectPaymentMethod("debit")}
-                        className={clsx(
-                            "bg-base-button hover:opacity-50 flex-1 justify-center items-center",
-                            {
-                                "bg-brand-purple-base": isDebitCardSelected,
-                            }
-                        )}
-                    >
-                        <Bank
-                            className={clsx("w-4 h-4 text-brand-purple-base", {
-                                "text-white": isDebitCardSelected,
-                            })}
-                            weight="bold"
-                        />
-                        <span
-                            className={clsx("ml-2 text-base-text text-sm", {
-                                "text-white font-semibold": isDebitCardSelected,
-                            })}
-                        >
-                            Cartão de débito
-                        </span>
-                    </Button>
-                    <Button
-                        onClick={() => handleSelectPaymentMethod("money")}
-                        className={clsx(
-                            "bg-base-button bg-base hover:opacity-50 flex-1 justify-center items-center",
-                            {
-                                "bg-brand-purple-base": isMoneySelected,
-                            }
-                        )}
-                    >
-                        <CurrencyDollarSimple
-                            className={clsx("w-4 h-4 text-brand-purple-base", {
-                                "text-white": isMoneySelected,
-                            })}
-                            weight="bold"
-                        />
-                        <span
-                            className={clsx("ml-2 text-base-text text-sm", {
-                                "text-white font-semibold": isMoneySelected,
-                            })}
-                        >
-                            Dinheiro
-                        </span>
-                    </Button>
+                    <PaymentMethodButton
+                        onChangePaymentMethod={() =>
+                            handleSelectPaymentMethod("credit")
+                        }
+                        isSelected={isCreditCardSelected}
+                        variant="credit"
+                        title="Cartão de crédito"
+                    />
+
+                    <PaymentMethodButton
+                        onChangePaymentMethod={() =>
+                            handleSelectPaymentMethod("debit")
+                        }
+                        isSelected={isDebitCardSelected}
+                        variant="debit"
+                        title="Cartão de débito"
+                    />
+
+                    <PaymentMethodButton
+                        onChangePaymentMethod={() =>
+                            handleSelectPaymentMethod("money")
+                        }
+                        isSelected={isMoneySelected}
+                        variant="money"
+                        title="Dinheiro"
+                    />
                 </div>
             </CheckoutContainer>
         </form>

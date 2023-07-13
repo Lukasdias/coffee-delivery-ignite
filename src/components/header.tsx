@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useCoffeeCart } from "../store/coffee-cart";
 import LogoImage from "./../assets/logo.svg";
 import { Button } from "./button";
+import { useCoffeeRequestsStore } from "../store/coffee-requests";
 
 type Props = {};
 
@@ -40,21 +41,31 @@ const ItemsOnCart = () => {
 };
 
 const Actions = () => {
+    const [targetAddress] = useCoffeeRequestsStore((store) => [
+        store.state.targetAddress,
+    ]);
     return (
         <div className={"flex items-center gap-3"}>
-            <Button
-                className={
-                    "bg-brand-purple-light hover:opacity-50 w-auto lg:w-[143px]"
-                }
-            >
-                <MapPin
-                    weight={"bold"}
-                    className="w-4 h-4 lg:w-6 lg:h-6 text-brand-purple-dark"
-                />
-                <span className={"text-xs lg:text-sm text-brand-purple-dark"}>
-                    São Luís, MA
-                </span>
-            </Button>
+            {targetAddress && (
+                <Button
+                    className={
+                        "bg-brand-purple-light hover:opacity-50 w-auto lg:w-[143px]"
+                    }
+                >
+                    <MapPin
+                        weight={"bold"}
+                        className="w-4 h-4 lg:w-6 lg:h-6 text-brand-purple-dark"
+                    />
+                    <span
+                        className={
+                            "text-xs lg:text-sm text-brand-purple-dark truncate"
+                        }
+                    >
+                        {targetAddress.city}, {targetAddress.state}
+                    </span>
+                </Button>
+            )}
+
             <Link to="checkout" className={"no-underline decoration-inherit"}>
                 <Button
                     className={

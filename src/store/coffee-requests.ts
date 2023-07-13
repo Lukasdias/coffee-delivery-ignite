@@ -11,17 +11,17 @@ export type CoffeeRequestsStore = {
 
 export type CoffeeRequest = {
     coffees: Coffee[];
-    targetAddress: Address;
 };
 
 export type CoffeeRequestsStoreState = {
     coffeeRequests: CoffeeRequest[];
+    targetAddress: Address | undefined;
 };
 
 export type CoffeeRequestsStoreActions = {
-    addCoffeeRequest: (coffeeRequest: CoffeeRequest) => void;
+    addCoffeeRequest: (coffeeRequest: CoffeeRequest, address: Address) => void;
     removeCoffeeRequest: (coffeeRequest: CoffeeRequest) => void;
-    editCoffeeRequest: (coffeeRequest: CoffeeRequest) => void;
+    editCoffeeRequest: (coffeeRequest: CoffeeRequest, address: Address) => void;
     listCoffeeRequests: () => CoffeeRequest[];
 };
 
@@ -31,11 +31,13 @@ export const useCoffeeRequestsStore = create(
             immer<CoffeeRequestsStore>((set, get) => ({
                 state: {
                     coffeeRequests: [],
+                    targetAddress: undefined,
                 },
                 actions: {
-                    addCoffeeRequest: (coffeeRequest) => {
+                    addCoffeeRequest: (coffeeRequest, address) => {
                         set((store) => {
                             store.state.coffeeRequests.push(coffeeRequest);
+                            store.state.targetAddress = address;
                         });
                     },
                     removeCoffeeRequest: (coffeeRequest) => {
@@ -44,9 +46,10 @@ export const useCoffeeRequestsStore = create(
                                 store.state.coffeeRequests.filter(
                                     (request) => request !== coffeeRequest
                                 );
+                            store.state.targetAddress = undefined;
                         });
                     },
-                    editCoffeeRequest: (coffeeRequest) => {
+                    editCoffeeRequest: (coffeeRequest, address) => {
                         set((store) => {
                             store.state.coffeeRequests =
                                 store.state.coffeeRequests.map((request) => {
@@ -55,6 +58,7 @@ export const useCoffeeRequestsStore = create(
                                     }
                                     return request;
                                 });
+                            store.state.targetAddress = address;
                         });
                     },
                     listCoffeeRequests: () => {
@@ -69,6 +73,7 @@ export const useCoffeeRequestsStore = create(
                     return {
                         state: {
                             coffeeRequests: store.state.coffeeRequests,
+                            targetAddress: store.state.targetAddress,
                         },
                     };
                 },

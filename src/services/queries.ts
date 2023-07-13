@@ -5,7 +5,6 @@ import {
     CoffeeVariants,
     setterCoffeeCartStore,
 } from "./../store/coffee-cart";
-import { setterCoffeeRequestsStore } from "../store/coffee-requests";
 import { toast } from "react-hot-toast";
 
 type CoffeeQuery = {
@@ -52,7 +51,7 @@ export const useCoffeesQuery = () => {
             });
         },
         onError(error) {
-            toast.error("Erro ao carregar os cafés", {
+            toast.error("Erro ao carregar cafés", {
                 icon: "❌",
             });
         },

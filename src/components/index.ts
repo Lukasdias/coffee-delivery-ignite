@@ -1,4 +1,5 @@
 export * from "./app-container";
+export * from "./bubble";
 export * from "./button";
 export * from "./checkout-container";
 export * from "./checkout-form";
@@ -9,5 +10,6 @@ export * from "./content.container";
 export * from "./divider";
 export * from "./header";
 export * from "./input";
+export * from "./payment-method";
 export * from "./presentation";
 export * from "./shopping-cart-item";

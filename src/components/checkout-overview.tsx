@@ -5,6 +5,7 @@ import { Button } from "./button";
 import { CheckoutContainer } from "./checkout-container";
 import { Divider } from "./divider";
 import { ShoppingCardItem } from "./shopping-cart-item";
+import { Link, useNavigate } from "react-router-dom";
 
 type Props = {
     onConfirmPurchase: () => void;
@@ -97,7 +98,7 @@ export function CheckoutOverview({ onConfirmPurchase }: Props) {
                                 </span>
                             </span>
                             <Button
-                                className="bg-brand-yellow-base hover:bg-brand-yellow-dark transition-all duration-200 mt-4"
+                                className="bg-brand-yellow-base hover:bg-brand-yellow-dark transition-all duration-200 mt-4 w-full"
                                 onClick={onConfirmPurchase}
                                 disabled={
                                     Object.entries(cart.coffees).length === 0
