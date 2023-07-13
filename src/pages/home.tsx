@@ -2,26 +2,25 @@ import { useEffect } from "react";
 import { CoffeeList } from "../components/coffee-list";
 import { Presentation } from "../components/presentation";
 import { useCoffeesQuery } from "../services/queries";
-import { useCoffeeStore } from "../store/coffee-delivery";
+import { useCoffeeCart } from "../store/coffee-cart";
 
 type Props = {};
 
 export function Home({}: Props) {
-  const [coffeeList, fillCoffeePool] = useCoffeeStore((store) => [
-    store.state.availableCoffees,
-    store.actions.fillCoffeePool,
-  ]);
+    const [coffeeList] = useCoffeeCart((store) => [
+        store.state.availableCoffees,
+    ]);
 
-  const { data: coffees, error, loading } = useCoffeesQuery();
+    const { error, loading } = useCoffeesQuery();
 
-  useEffect(() => {
-    fillCoffeePool(coffees);
-  }, [coffees]);
-
-  return (
-    <div className={"w-full text-brand-purple-base"}>
-      <Presentation />
-      <CoffeeList coffeeList={coffeeList} error={error} isLoading={loading} />
-    </div>
-  );
+    return (
+        <div className={"w-full text-brand-purple-base"}>
+            <Presentation />
+            <CoffeeList
+                coffeeList={coffeeList}
+                error={error}
+                isLoading={loading}
+            />
+        </div>
+    );
 }
