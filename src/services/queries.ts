@@ -6,6 +6,7 @@ import {
     setterCoffeeCartStore,
 } from "./../store/coffee-cart";
 import { setterCoffeeRequestsStore } from "../store/coffee-requests";
+import { toast } from "react-hot-toast";
 
 type CoffeeQuery = {
     id: string;
@@ -48,6 +49,11 @@ export const useCoffeesQuery = () => {
                     thumbnail: coffee.thumbnail.url,
                 })) as Coffee[];
                 store.state.availableCoffees = coffees;
+            });
+        },
+        onError(error) {
+            toast.error("Erro ao carregar os cafés", {
+                icon: "❌",
             });
         },
     });

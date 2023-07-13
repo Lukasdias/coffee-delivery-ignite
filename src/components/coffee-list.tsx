@@ -12,7 +12,7 @@ interface CoffeeListProps {
 
 const CoffeeListHeader = () => {
     return (
-        <h1 className={"text-base-subtitle font-bold text-3xl mb-14"}>
+        <h1 className={"text-base-subtitle font-bold text-3xl mb-16"}>
             Nossos cafés
         </h1>
     );
@@ -32,7 +32,8 @@ const EmptyCoffeeList = () => {
 
 export const CoffeeList: FC<CoffeeListProps> = memo(
     ({ coffeeList, error, isLoading }) => {
-        if (coffeeList.length === 0)
+        const isEmpty = coffeeList.length === 0;
+        if (isEmpty)
             return (
                 <ContentContainer>
                     <CoffeeListHeader />
@@ -44,7 +45,7 @@ export const CoffeeList: FC<CoffeeListProps> = memo(
                 <CoffeeListHeader />
                 <div
                     className={
-                        "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+                        "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 "
                     }
                 >
                     {coffeeList.map((coffee, index) => (
