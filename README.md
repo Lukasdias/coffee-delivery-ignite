@@ -26,6 +26,8 @@ Neste projeto, utilizei várias tecnologias e bibliotecas para criar uma experi�
 
 -   **Hygraph CMS**: Uma plataforma de gerenciamento de conteúdo baseada em GraphQL utilizada para fornecer dados de cafés via API GraphQL. Para obter mais informações sobre o Hygraph CMS, visite o site oficial [aqui](https://hygraph.io/).
 
+-   **Tailwind CSS**: Um framework de CSS utilitário que agiliza o processo de estilização dos componentes, permitindo a criação de interfaces responsivas e elegantes. Você pode encontrar mais informações sobre o Tailwind CSS [aqui](https://tailwindcss.com/).
+
 # Funcionalidades do Desafio
 
 O desafio consiste em criar uma aplicação de carrinho de compras para uma cafeteria fictícia com as seguintes funcionalidades:
